@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Create a single instance of the player
     const playerElement = document.getElementById('player');
-    const player = shaka-player({
+    const player = new shaka.Player({
         parentId: "#player",
         width: '100%',
         height: '100%',
@@ -61,5 +61,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function playStream(url) {
         player.load(url);
+    }
+});
+
+// Check if the stream is an HLS stream or DASH
+            if (manifestUri.endsWith('.m3u8')) {
+                // HLS stream - use HLS.js
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(manifestUri);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                        console.log("HLS stream loaded");
+                    });
+                } else {
+                    console.error("HLS is not supported in this browser.");
+                }
+            } else {
+                // DASH stream - use Shaka Player
+                let clearKeys = null;
+                if (clearkey != null) {
+                    let [kid, key] = clearkey.split(":").map(item => item.trim());
+                    clearKeys = {};
+                    clearKeys[kid] = key;
+                }
+
+                // Destroy existing player if it exists
+                if (player) {
+                    player.destroy().catch(error => {
+                        console.error("Error destroying the player:", error);
+                    });
+                }
+
+// Initialize new player
+                player = new shaka.Player(player);
+
+                player.configure({
+    drm: {
+        servers: {
+            'com.widevine.alpha': licenseServer
+        },
+        clearKeys: clearKeys || {}
+    },
+    streaming: {
+        bufferingGoal: 0  // ✅ This is a valid setting
     }
 });
