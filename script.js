@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (Hls.isSupported()) {
                     const hls = new Hls();
                     hls.loadSource(manifestUri);
-                    hls.attachMedia(video);
+                    hls.attachMedia(player);
                     hls.on(Hls.Events.MANIFEST_PARSED, function () {
                         console.log("HLS stream loaded");
                     });
