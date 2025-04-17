@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Create a single instance of the player
     const playerElement = document.getElementById('player');
-    const player = new Clappr.Player({
+    const player = shaka-player({
         parentId: "#player",
         width: '100%',
         height: '100%',
